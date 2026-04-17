@@ -1,0 +1,10 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+<h1>Add Note</h1>
+        <form method="post">
+            <input type="hidden" name="_token" value="{{ csrf_token('add_note') }}">
+            <input type="text" name="note" required>
+            <button type="submit">Add</button>
+        </form>
+<a href="/">Back to List</a>
+{% endblock %}

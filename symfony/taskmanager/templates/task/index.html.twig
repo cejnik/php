@@ -1,0 +1,12 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<h1>Task List</h1>
+<p>Počet poznámek: {{ notes|length }}</p>
+<ul>
+    {% for note in notes %}
+        <li>{{ note }} <a href="/delete/{{loop.index0}}">Delete</a></li>
+    {% endfor %}
+</ul>
+<a href="/add">Add Note</a>
+{% endblock %}

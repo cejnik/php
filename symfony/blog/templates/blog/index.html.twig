@@ -1,0 +1,18 @@
+{% extends 'base.html.twig' %}
+{% block body %}
+    <ul>
+        {% for post in posts %}
+            <li>
+
+                    <strong>Title: {{ post.title }}</strong><br>
+                        Content: {{ post.content }}<br>
+                    <small>Author: {{ post.author }}</small>
+                     <form action="{{ path('delete_blog', { id: loop.index0 }) }}" method="post">
+                    <button type="submit">Delete</button>
+                </form>
+            </li>
+
+        {% endfor %}
+    </ul>  
+    <a href="/add">Add Post</a>
+{% endblock %}

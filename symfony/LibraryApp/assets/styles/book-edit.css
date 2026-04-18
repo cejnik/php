@@ -1,0 +1,41 @@
+.book-form {
+    display: grid;
+    gap: 18px;
+    padding: 24px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    box-shadow: 0 14px 34px rgba(34, 37, 31, 0.08);
+}
+
+.book-form > div {
+    display: grid;
+    gap: 7px;
+}
+
+.book-form label {
+    color: var(--primary-dark);
+    font-weight: 700;
+}
+
+.book-form input,
+.book-form select {
+    width: 100%;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 12px 13px;
+    color: var(--text);
+    font: inherit;
+    background: #ffffff;
+}
+
+.book-form input:focus,
+.book-form select:focus {
+    outline: 3px solid rgba(52, 111, 91, 0.18);
+    border-color: var(--primary);
+}
+
+.book-form input[type="checkbox"] {
+    width: auto;
+    transform: translateY(1px);
+}

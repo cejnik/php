@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New book{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/book-new.css') }}">
+{% endblock %}
+
+{% block body %}
+    <main class="page-shell page-shell-narrow">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Add to library</p>
+                <h1>New book</h1>
+            </div>
+            <a class="button button-secondary" href="{{ path('app_book') }}">Back</a>
+        </header>
+
+        {{ form_start(form, { attr: { class: 'book-form' } }) }}
+            {{ form_widget(form) }}
+
+            <button class="button button-primary" type="submit">Save</button>
+        {{ form_end(form) }}
+    </main>
+{% endblock %}

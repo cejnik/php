@@ -1,20 +1,55 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello BookController!{% endblock %}
+{% block title %}LibraryApp{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/book-index.css') }}">
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main class="page-shell">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Book collection</p>
+                <h1>LibraryApp</h1>
+            </div>
+            <a class="button button-primary" href="{{ path('book_new') }}">New book</a>
+        </header>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+        <section class="book-grid">
+            {% for book in books %}
+                <article class="book-card">
+                    <div class="book-card-header">
+                        <div>
+                            <p class="book-genre">{{ book.genre }}</p>
+                            <h2>{{ book.title }}</h2>
+                        </div>
+                        <span class="book-year">{{ book.year }}</span>
+                    </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/python_kurz/php/php/symfony/LibraryApp/src/Controller/BookController.php</code></li>
-        <li>Your template at <code>C:/python_kurz/php/php/symfony/LibraryApp/templates/book/index.html.twig</code></li>
-    </ul>
-</div>
+                    <p class="book-author">{{ book.author }}</p>
+
+                    {% if book.isRead %}
+                        <p class="book-status book-status-read">Book is read.</p>
+                    {% else %}
+                        <p class="book-status book-status-unread">Book still not read.</p>
+                    {% endif %}
+
+                    <div class="book-actions">
+                        <a class="button button-secondary" href="{{ path('book_edit', { id: book.id }) }}">Edit this book</a>
+                        <form action="{{ path('book_delete', { id: book.id }) }}" method="post">
+                            <button class="button button-danger" type="submit">Delete this book</button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <div class="empty-state">
+                    <h2>No books yet.</h2>
+                    <p>Add your first book and start building the shelf.</p>
+                    <a class="button button-primary" href="{{ path('book_new') }}">New book</a>
+                </div>
+            {% endfor %}
+        </section>
+    </main>
 {% endblock %}

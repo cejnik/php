@@ -1,22 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CookingBookController!{% endblock %}
+{% block title %}Pridat recept{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main class="page-shell page-shell-narrow">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Novy recept</p>
+                <h1>Pridat recept</h1>
+            </div>
+            <a class="button button-secondary" href="{{ path('recipe_list') }}">Zpet</a>
+        </header>
 
-<div class="example-wrapper">
-        <form action={{ path("add_recipe")}} method="post">
-            <p>Název: <input type="text" name="name"></p>
-            <p>Kategorie: <input type="text" name="category"></p>
-            <p>Čas: <input type="time" name="time" id=""></p>
-            <p>Suroviny: <textarea name="ingredients" id=""></textarea></p>
-            <p>Postup: <textarea name="instructions" id=""></textarea></p>
-            <button type="submit">Přidat recept</button>
-            <br>
+        <form class="recipe-form" action="{{ path('add_recipe') }}" method="post">
+            <label>
+                Nazev
+                <input type="text" name="name">
+            </label>
+
+            <label>
+                Kategorie
+                <input type="text" name="category">
+            </label>
+
+            <label>
+                Cas
+                <input type="text" name="time" placeholder="20 min">
+            </label>
+
+            <label>
+                Suroviny
+                <textarea name="ingredients"></textarea>
+            </label>
+
+            <label>
+                Postup
+                <textarea name="instructions"></textarea>
+            </label>
+
+            <button class="button button-primary" type="submit">Pridat recept</button>
         </form>
-</div>
+    </main>
 {% endblock %}

@@ -56,11 +56,34 @@ final class CookingBookController extends AbstractController
         return $this->redirectToRoute("recipe_list");
 
 
+
     }
+    #[Route("/edit/{id}", name: 'edit_recipe')]
+    public function edit_recipe(SessionInterface $session, Request $request, int $id): Response
+    {
+        $recipes = $session->get("recipes", []);
 
+        if (!isset($recipes[$id])) {
+            return $this->redirectToRoute('recipe_list');
+        }
 
+        if ($request->isMethod("POST")) {
+            $recipes[$id] = [
+                "name" => $request->request->get("name"),
+                "category" => $request->request->get("category"),
+                "time" => $request->request->get("time"),
+                "ingredients" => $request->request->get("ingredients"),
+                "instructions" => $request->request->get("instructions")
+            ];
 
+            $session->set("recipes", $recipes);
 
+            return $this->redirectToRoute("recipe_list");
+        }
 
-
+        return $this->render("cooking_book/edit.html.twig", [
+            "recipe" => $recipes[$id],
+            "id" => $id
+        ]);
+    }
 }

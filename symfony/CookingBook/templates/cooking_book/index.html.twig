@@ -1,26 +1,46 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello CookingBookController!{% endblock %}
+{% block title %}CookingBook{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main class="page-shell">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Moje kucharka</p>
+                <h1>CookingBook</h1>
+            </div>
+            <a class="button button-primary" href="{{ path('add_recipe') }}">Pridat recept</a>
+        </header>
 
-<div class="example-wrapper">
-    {% for recipe in recipes %}
-    <li><h1>{{recipe.name}}</h1></li>
-    <li>{{recipe.category}}</li>
-    <li>{{recipe.time}}</li>
-    <li>{{recipe.ingredients}}</li>
-    <li>{{recipe.instructions}}</li>
-    <br>
-    <form action="{{ path('delete_recipe', { id: loop.index0 }) }}" method="post">
-            <button type="submit">Smaž recept</button>
-    </form>
-    {% endfor %}
-    <br>
-    <a href={{ path("add_recipe") }}>Přidat recept!</a>
-</div>
+        <section class="recipe-grid">
+            {% for recipe in recipes %}
+                <article class="recipe-card">
+                    <div class="recipe-card-header">
+                        <div>
+                            <p class="recipe-category">{{ recipe.category }}</p>
+                            <h2>{{ recipe.name }}</h2>
+                        </div>
+                        <span class="recipe-time">{{ recipe.time }}</span>
+                    </div>
+
+                    <div class="recipe-section">
+                        <h3>Suroviny</h3>
+                        <p>{{ recipe.ingredients }}</p>
+                    </div>
+
+                    <div class="recipe-section">
+                        <h3>Postup</h3>
+                        <p>{{ recipe.instructions }}</p>
+                    </div>
+
+                    <div class="recipe-actions">
+                        <a class="button button-secondary" href="{{ path('edit_recipe', { id: loop.index0 }) }}">Upravit</a>
+                        <form action="{{ path('delete_recipe', { id: loop.index0 }) }}" method="post">
+                            <button class="button button-danger" type="submit">Smazat</button>
+                        </form>
+                    </div>
+                </article>
+            {% endfor %}
+        </section>
+    </main>
 {% endblock %}

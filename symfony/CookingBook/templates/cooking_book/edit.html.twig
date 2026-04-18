@@ -1,0 +1,44 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Upravit recept{% endblock %}
+
+{% block body %}
+    <main class="page-shell page-shell-narrow">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Uprava receptu</p>
+                <h1>{{ recipe.name }}</h1>
+            </div>
+            <a class="button button-secondary" href="{{ path('recipe_list') }}">Zpet</a>
+        </header>
+
+        <form class="recipe-form" action="{{ path('edit_recipe', { id: id }) }}" method="post">
+            <label>
+                Nazev
+                <input type="text" name="name" value="{{ recipe.name }}">
+            </label>
+
+            <label>
+                Kategorie
+                <input type="text" name="category" value="{{ recipe.category }}">
+            </label>
+
+            <label>
+                Cas
+                <input type="text" name="time" value="{{ recipe.time }}">
+            </label>
+
+            <label>
+                Suroviny
+                <textarea name="ingredients">{{ recipe.ingredients }}</textarea>
+            </label>
+
+            <label>
+                Postup
+                <textarea name="instructions">{{ recipe.instructions }}</textarea>
+            </label>
+
+            <button class="button button-primary" type="submit">Ulozit zmeny</button>
+        </form>
+    </main>
+{% endblock %}

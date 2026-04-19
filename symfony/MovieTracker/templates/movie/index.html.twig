@@ -1,0 +1,56 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}MovieTracker{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/movie-index.css') }}">
+{% endblock %}
+
+{% block body %}
+    <main class="page-shell">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Watchlist studio</p>
+                <h1>MovieTracker</h1>
+            </div>
+            <a class="button button-primary" href="{{ path('new_movie') }}">Add new movie</a>
+        </header>
+
+        <section class="movie-grid">
+            {% for movie in movies %}
+                <article class="movie-card">
+                    <div class="movie-card-top">
+                        <div>
+                            <p class="movie-genre">{{ movie.genre }}</p>
+                            <h2>{{ movie.title }}</h2>
+                        </div>
+                        <span class="movie-rating">{{ movie.rating }}/10</span>
+                    </div>
+
+                    <p class="movie-director">Directed by {{ movie.director }}</p>
+                    <p class="movie-year">{{ movie.releaseYear }}</p>
+
+                    {% if movie.watched %}
+                        <p class="movie-status movie-status-watched">Watched</p>
+                    {% else %}
+                        <p class="movie-status movie-status-waiting">Not watched</p>
+                    {% endif %}
+
+                    <div class="movie-actions">
+                        <a class="button button-secondary" href="{{ path('edit_movie', { id: movie.id }) }}">Edit movie</a>
+                        <form action="{{ path('delete_movie', { id: movie.id }) }}" method="post">
+                            <button class="button button-danger" type="submit">Delete movie</button>
+                        </form>
+                    </div>
+                </article>
+            {% else %}
+                <div class="empty-panel">
+                    <h2>No movie yet.</h2>
+                    <p>Add the first title and get the reel rolling.</p>
+                    <a class="button button-primary" href="{{ path('new_movie') }}">Add new movie</a>
+                </div>
+            {% endfor %}
+        </section>
+    </main>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit movie{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/movie-form.css') }}">
+{% endblock %}
+
+{% block body %}
+    <main class="page-shell page-shell-narrow">
+        <header class="page-header">
+            <div>
+                <p class="eyebrow">Rewrite scene</p>
+                <h1>Edit movie</h1>
+            </div>
+            <a class="button button-secondary" href="{{ path('app_movie') }}">Back</a>
+        </header>
+
+        {{ form_start(form, { attr: { class: 'movie-form' } }) }}
+            {{ form_widget(form) }}
+            <button class="button button-primary" type="submit">Save edit changes</button>
+        {{ form_end(form) }}
+    </main>
+{% endblock %}

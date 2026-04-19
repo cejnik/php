@@ -16,7 +16,7 @@ final class MovieController extends AbstractController
     #[Route('/', name: 'app_movie')]
     public function index(MovieRepository $movieRepository): Response
     {
-        $movies = $movieRepository->findAll();
+        $movies = $movieRepository->findBy([], ['id' => 'ASC']);
         return $this->render('movie/index.html.twig', [
             "movies" => $movies
         ]);
@@ -30,7 +30,7 @@ final class MovieController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManagerInterface->persist($movie);
             $entityManagerInterface->flush();
-
+            $this->addFlash('success', 'Movie was created.');
             return $this->redirectToRoute('app_movie');
 
         }
@@ -50,7 +50,7 @@ final class MovieController extends AbstractController
         } else {
             $entityManagerInterface->remove($movie);
             $entityManagerInterface->flush();
-
+            $this->addFlash('success', 'Movie was deleted.');
             return $this->redirectToRoute('app_movie');
         }
     }
@@ -67,11 +67,30 @@ final class MovieController extends AbstractController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManagerInterface->flush();
-
+            $this->addFlash('success', 'Movie was updated.');
             return $this->redirectToRoute('app_movie');
         }
         return $this->render('movie/edit.html.twig', [
             'form' => $form->createView()
         ]);
     }
+    #[Route('/toggle/{id}', name: 'toggle_movie')]
+    public function toggle_movie(int $id, Request $request, MovieRepository $movieRepository, EntityManagerInterface $entityManagerInterface): Response
+    {
+
+        $movie = $movieRepository->find($id);
+        if (!$movie) {
+            return $this->redirectToRoute('app_movie');
+        }
+        if ($request->isMethod('POST')) {
+            $movie->setWatched(!$movie->isWatched());
+            $entityManagerInterface->flush();
+            $this->addFlash('success', 'Status was changed.');
+            return $this->redirectToRoute('app_movie');
+        }
+        return $this->redirectToRoute('app_movie');
+
+    }
+
+
 }

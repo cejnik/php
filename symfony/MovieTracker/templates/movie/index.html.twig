@@ -32,9 +32,13 @@
                     <p class="movie-year">{{ movie.releaseYear }}</p>
 
                     {% if movie.watched %}
-                        <p class="movie-status movie-status-watched">Watched</p>
+                        <form action="{{ path('toggle_movie', { id: movie.id }) }}" method="post">
+                            <button class="movie-status movie-status-watched" type="submit">Watched</button>
+                        </form>
                     {% else %}
-                        <p class="movie-status movie-status-waiting">Not watched</p>
+                        <form action="{{ path('toggle_movie', { id: movie.id }) }}" method="post">
+                            <button class="movie-status movie-status-waiting" type="submit">Not Watched</button>
+                        </form>
                     {% endif %}
 
                     <div class="movie-actions">

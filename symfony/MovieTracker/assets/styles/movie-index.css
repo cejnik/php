@@ -1,3 +1,33 @@
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin: 0 0 26px;
+}
+
+.filter-link {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    padding: 10px 14px;
+    border: 3px solid var(--ink);
+    border-radius: 8px;
+    background: var(--paper);
+    box-shadow: 4px 4px 0 var(--ink);
+    color: var(--ink);
+    font-weight: 900;
+    text-decoration: none;
+    transition: transform 120ms ease, box-shadow 120ms ease, background 120ms ease;
+}
+
+.filter-link:hover,
+.filter-link.is-active {
+    transform: translate(2px, 2px);
+    box-shadow: 2px 2px 0 var(--ink);
+    background: var(--yellow);
+}
+
 .movie-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));

@@ -17,6 +17,12 @@
             <a class="button button-primary" href="{{ path('new_movie') }}">Add new movie</a>
         </header>
 
+        <nav class="filter-bar" aria-label="Movie filters">
+            <a class="filter-link {{ filter == 'all' ? 'is-active' }}" href="{{ path('app_movie') }}">All</a>
+            <a class="filter-link {{ filter == 'watched' ? 'is-active' }}" href="{{ path('app_movie', { filter: 'watched' }) }}">Watched</a>
+            <a class="filter-link {{ filter == 'unwatched' ? 'is-active' }}" href="{{ path('app_movie', { filter: 'unwatched' }) }}">Not watched</a>
+        </nav>
+
         <section class="movie-grid">
             {% for movie in movies %}
                 <article class="movie-card">

@@ -14,11 +14,19 @@ use Symfony\Component\Routing\Attribute\Route;
 final class MovieController extends AbstractController
 {
     #[Route('/', name: 'app_movie')]
-    public function index(MovieRepository $movieRepository): Response
+    public function index(MovieRepository $movieRepository, Request $request): Response
     {
-        $movies = $movieRepository->findBy([], ['id' => 'ASC']);
+        $filter = $request->query->get('filter', 'all');
+        if ($filter === 'watched') {
+            $movies = $movieRepository->findBy(["watched" => true], ['id' => 'ASC']);
+        } elseif ($filter === 'unwatched') {
+            $movies = $movieRepository->findBy(['watched' => false], ['id' => 'ASC']);
+        } else {
+            $movies = $movieRepository->findBy([], ['id' => 'ASC']);
+        }
         return $this->render('movie/index.html.twig', [
-            "movies" => $movies
+            "movies" => $movies,
+            "filter" => $filter
         ]);
     }
     #[Route('/new', name: 'new_movie')]

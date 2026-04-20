@@ -39,10 +39,12 @@
 
                     {% if movie.watched %}
                         <form action="{{ path('toggle_movie', { id: movie.id }) }}" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token('toggle_movie_' ~ movie.id) }}>
                             <button class="movie-status movie-status-watched" type="submit">Watched</button>
                         </form>
                     {% else %}
                         <form action="{{ path('toggle_movie', { id: movie.id }) }}" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token('toggle_movie_' ~ movie.id) }}>
                             <button class="movie-status movie-status-waiting" type="submit">Not Watched</button>
                         </form>
                     {% endif %}
@@ -50,6 +52,7 @@
                     <div class="movie-actions">
                         <a class="button button-secondary" href="{{ path('edit_movie', { id: movie.id }) }}">Edit movie</a>
                         <form action="{{ path('delete_movie', { id: movie.id }) }}" method="post">
+                            <input type="hidden" name="_token" value={{ csrf_token('delete_movie_' ~ movie.id) }}>
                             <button class="button button-danger" type="submit">Delete movie</button>
                         </form>
                     </div>

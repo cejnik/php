@@ -52,6 +52,13 @@ final class MovieController extends AbstractController
         if (!$request->isMethod('POST')) {
             return $this->redirectToRoute('app_movie');
         }
+
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete_movie_'.$id, $token)) {
+            $this->addFlash('error', 'CSRF token is not valid');
+            return $this->redirectToRoute('app_movie');
+        }
+
         $movie = $movieRepository->find($id);
         if (!$movie) {
             return $this->redirectToRoute('app_movie');
@@ -85,19 +92,27 @@ final class MovieController extends AbstractController
     #[Route('/toggle/{id}', name: 'toggle_movie')]
     public function toggle_movie(int $id, Request $request, MovieRepository $movieRepository, EntityManagerInterface $entityManagerInterface): Response
     {
-
         $movie = $movieRepository->find($id);
+
         if (!$movie) {
             return $this->redirectToRoute('app_movie');
         }
-        if ($request->isMethod('POST')) {
-            $movie->setWatched(!$movie->isWatched());
-            $entityManagerInterface->flush();
-            $this->addFlash('success', 'Status was changed.');
+
+        if (!$request->isMethod('POST')) {
             return $this->redirectToRoute('app_movie');
         }
-        return $this->redirectToRoute('app_movie');
 
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('toggle_movie_' . $id, $token)) {
+            $this->addFlash('error', 'CSRF token is not valid');
+            return $this->redirectToRoute('app_movie');
+        }
+
+
+        $movie->setWatched(!$movie->isWatched());
+        $entityManagerInterface->flush();
+        $this->addFlash('success', 'Status was changed.');
+        return $this->redirectToRoute('app_movie');
     }
 
 

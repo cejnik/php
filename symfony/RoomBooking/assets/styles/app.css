@@ -86,7 +86,10 @@ h1 {
     font-weight: 700;
     line-height: 1.2;
     text-decoration: none;
-    transition: transform 0.16s ease, box-shadow 0.16s ease, background-color 0.16s ease;
+    transition:
+        transform 0.16s ease,
+        box-shadow 0.16s ease,
+        background-color 0.16s ease;
 }
 
 .button:hover {
@@ -130,6 +133,12 @@ h1 {
 
 .flash-error {
     border-left-color: var(--coral);
+}
+
+.page-actions {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
 }
 
 @media (max-width: 700px) {

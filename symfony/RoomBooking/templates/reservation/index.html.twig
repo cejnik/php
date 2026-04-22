@@ -1,20 +1,69 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ReservationController!{% endblock %}
+{% block title %}Reservations{% endblock %}
+
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/reservation-index.css') }}">
+{% endblock %}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+    <main class="page-shell">
+        <section class="page-header">
+            <div>
+                <p class="eyebrow">Reservations</p>
+                <h1>Room reservations</h1>
+                <p class="page-intro">Track planned meetings and assigned rooms.</p>
+            </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+            <div class="page-actions">
+                <a class="button button-secondary" href="{{ path('index') }}">Back to rooms</a>
+            </div>
+        </section>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>C:/python_kurz/php/php/symfony/RoomBooking/src/Controller/ReservationController.php</code></li>
-        <li>Your template at <code>C:/python_kurz/php/php/symfony/RoomBooking/templates/reservation/index.html.twig</code></li>
-    </ul>
-</div>
+        <section class="reservation-list">
+        {% for reservation in reservations %}
+            <article class="reservation-card">
+                <div class="reservation-main">
+                    <div>
+                        <p class="reservation-label">Room</p>
+                        <h2>{{ reservation.room.name }}</h2>
+                    </div>
+                    <span class="reservation-status">{{ reservation.status }}</span>
+                </div>
+
+                <div class="reservation-details">
+                    <div>
+                        <p class="reservation-label">Visitor</p>
+                        <p>{{ reservation.visitorName }}</p>
+                        <a href="mailto:{{ reservation.visitorEmail }}">{{ reservation.visitorEmail }}</a>
+                    </div>
+
+                    <div>
+                        <p class="reservation-label">Starts</p>
+                        <p>{{ reservation.startsAt|date('Y-m-d H:i') }}</p>
+                    </div>
+
+                    <div>
+                        <p class="reservation-label">Ends</p>
+                        <p>{{ reservation.endsAt|date('Y-m-d H:i') }}</p>
+                    </div>
+                </div>
+
+                {% if reservation.note %}
+                    <div class="reservation-note">
+                        <p class="reservation-label">Note</p>
+                        <p>{{ reservation.note }}</p>
+                    </div>
+                {% endif %}
+            </article>
+        {% else %}
+            <div class="empty-panel">
+                <h2>No reservations yet</h2>
+                <p>Reservations will appear here after the booking form is ready.</p>
+                <a class="button button-primary" href="{{ path('index') }}">View rooms</a>
+            </div>
+        {% endfor %}
+        </section>
+    </main>
 {% endblock %}

@@ -36,6 +36,9 @@ class Reservation
     #[ORM\JoinColumn(nullable: false)]
     private ?Room $room = null;
 
+    #[ORM\Column(length: 255)]
+    private ?string $visitorEmail = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -121,6 +124,18 @@ class Reservation
     public function setRoom(?Room $room): static
     {
         $this->room = $room;
+
+        return $this;
+    }
+
+    public function getVisitorEmail(): ?string
+    {
+        return $this->visitorEmail;
+    }
+
+    public function setVisitorEmail(string $visitorEmail): static
+    {
+        $this->visitorEmail = $visitorEmail;
 
         return $this;
     }

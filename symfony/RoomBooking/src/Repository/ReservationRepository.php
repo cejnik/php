@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Reservation;
+use App\Entity\Room;
+use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,25 @@ class ReservationRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Reservation::class);
+    }
+
+    public function findConflictingReservation(Room $room, DateTimeImmutable $startsAt, DateTimeImmutable $endsAt, ?int $ignoreReservationId = null): ?Reservation
+    {
+        $qb = $this->createQueryBuilder('r')
+            ->andWhere('r.room = :room')
+            ->andWhere('r.startsAt < :endsAt')
+            ->andWhere('r.endsAt > :startsAt')
+            ->setParameter('room', $room)
+            ->setParameter('startsAt', $startsAt)
+            ->setParameter('endsAt', $endsAt);
+
+
+        if ($ignoreReservationId) {
+            $qb->andWhere('r.id != :ignoreReservationId');
+            $qb->setParameter('ignoreReservationId', $ignoreReservationId);
+        }
+        return $qb->getQuery()->getOneOrNullResult();
+
     }
 
     //    /**

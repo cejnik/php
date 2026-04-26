@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}New reservation{% endblock %}
+{% block title %}Edit reservation{% endblock %}
 
 {% block stylesheets %}
     {{ parent() }}
@@ -11,7 +11,8 @@
     <main class="page-shell form-page">
         <section class="page-header">
             <div>
-                <p class="eyebrow">New reservation</p>
+                <p class="eyebrow">Reservation settings</p>
+                <h1>Edit reservation</h1>
             </div>
             <a class="button button-secondary" href="{{ path('index_reservation') }}">Back to reservations</a>
         </section>
@@ -34,7 +35,7 @@
                 {{ form_row(form.note) }}
 
                 <div class="form-actions">
-                    <button class="button button-primary" type="submit">Save new reservation</button>
+                    <button class="button button-primary" type="submit">Save edited reservation</button>
                 </div>
             {{ form_end(form) }}
         </section>

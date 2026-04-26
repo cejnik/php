@@ -25,6 +25,22 @@
     font-weight: 700;
 }
 
+.form-panel ul {
+    margin: 0;
+    padding: 10px 12px;
+    border: 1px solid #f0b7b7;
+    border-radius: 8px;
+    background: #fff1f1;
+    color: #8f2323;
+    list-style: none;
+}
+
+.form-panel li {
+    margin: 0;
+    line-height: 1.4;
+    font-weight: 700;
+}
+
 .form-panel input,
 .form-panel select,
 .form-panel textarea {
@@ -50,6 +66,13 @@
     width: 20px;
     min-height: 20px;
     accent-color: var(--green);
+}
+
+.form-panel input[aria-invalid="true"],
+.form-panel select[aria-invalid="true"],
+.form-panel textarea[aria-invalid="true"] {
+    border-color: var(--coral);
+    box-shadow: 0 0 0 4px rgba(217, 72, 72, 0.14);
 }
 
 .form-actions {

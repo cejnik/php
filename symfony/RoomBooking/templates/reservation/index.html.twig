@@ -30,10 +30,14 @@
                         <p class="reservation-label">Room</p>
                         <h2>{{ reservation.room.name }}</h2>
                     </div>
+                    <div>
+                        <a class="button button-secondary" href="{{path('edit_reservation', { id: reservation.id })}}">Edit reservation</a>
+                    </div>
                     <span class="reservation-status">{{ reservation.status }}</span>
                 </div>
 
                 <div class="reservation-details">
+
                     <div>
                         <p class="reservation-label">Visitor</p>
                         <p>{{ reservation.visitorName }}</p>

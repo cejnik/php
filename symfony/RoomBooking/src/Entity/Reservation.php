@@ -65,6 +65,7 @@ class Reservation
     {
         $this->startsAt = $startsAt;
 
+
         return $this;
     }
 

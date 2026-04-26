@@ -19,9 +19,11 @@ class ReservationType extends AbstractType
             ->add('visitorName')
             ->add('startsAt', DateTimeType::class, [
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
             ])
             ->add('endsAt', DateTimeType::class, [
                 'widget' => 'single_text',
+                'input' => 'datetime_immutable',
             ])
             ->add('note')
             ->add('room', EntityType::class, [

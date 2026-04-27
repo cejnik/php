@@ -24,9 +24,14 @@ class ReservationRepository extends ServiceEntityRepository
             ->andWhere('r.room = :room')
             ->andWhere('r.startsAt < :endsAt')
             ->andWhere('r.endsAt > :startsAt')
+            ->andWhere('r.status = :status')
             ->setParameter('room', $room)
             ->setParameter('startsAt', $startsAt)
-            ->setParameter('endsAt', $endsAt);
+            ->setParameter('endsAt', $endsAt)
+            ->setParameter('status', 'confirmed'); // cancelled rezervace se do conflict checku už nepočítají
+
+
+
 
 
         if ($ignoreReservationId) {

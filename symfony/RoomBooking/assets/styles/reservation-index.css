@@ -1,3 +1,23 @@
+.reservation-section {
+    display: grid;
+    gap: 18px;
+}
+
+.reservation-section + .reservation-section {
+    margin-top: 34px;
+}
+
+.reservation-section-history {
+    padding-top: 22px;
+    border-top: 1px solid #cfd6df;
+}
+
+.section-heading h2 {
+    margin: 0;
+    font-size: 1.6rem;
+    line-height: 1.2;
+}
+
 .reservation-list {
     display: grid;
     gap: 16px;
@@ -20,6 +40,24 @@
     gap: 18px;
 }
 
+.reservation-controls {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 12px;
+}
+
+.reservation-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.reservation-actions form {
+    margin: 0;
+}
+
 .reservation-main h2 {
     margin: 0;
     font-size: 1.45rem;
@@ -35,6 +73,11 @@
     font-size: 0.82rem;
     font-weight: 700;
     text-transform: capitalize;
+}
+
+.reservation-status-cancelled {
+    background: #d2d8e0;
+    color: #4f5b68;
 }
 
 .reservation-details {
@@ -78,6 +121,38 @@
     text-decoration: underline;
 }
 
+.reservation-card-cancelled {
+    border-color: #c5ccd6;
+    background: #e4e9ef;
+    box-shadow: none;
+    opacity: 0.94;
+}
+
+.reservation-card-cancelled .reservation-main h2,
+.reservation-card-cancelled .reservation-details p,
+.reservation-card-cancelled .reservation-note p {
+    color: #5d6976;
+}
+
+.reservation-card-cancelled .reservation-label {
+    color: #6e7a88;
+}
+
+.reservation-card-cancelled .reservation-details > div,
+.reservation-card-cancelled .reservation-note {
+    background: #d7dde5;
+}
+
+.reservation-card-cancelled .reservation-details a {
+    color: #55616f;
+}
+
+.reservation-card-cancelled .button {
+    border-color: #b9c2cc;
+    background: #d5dbe3;
+    color: #495463;
+}
+
 .empty-panel {
     padding: 34px;
     border: 1px dashed var(--line);
@@ -98,14 +173,25 @@
     line-height: 1.6;
 }
 
+.empty-panel-history {
+    border-color: #c5ccd6;
+    background: rgba(222, 228, 235, 0.95);
+}
+
 @media (max-width: 760px) {
-    .reservation-main,
     .reservation-details {
         grid-template-columns: 1fr;
     }
 
     .reservation-main {
         flex-direction: column;
+    }
+
+    .reservation-controls,
+    .reservation-actions {
+        width: 100%;
+        align-items: stretch;
+        justify-content: stretch;
     }
 
     .reservation-status {

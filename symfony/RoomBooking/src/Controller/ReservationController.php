@@ -17,9 +17,12 @@ final class ReservationController extends AbstractController
     #[Route('/reservation', name: 'index_reservation')]
     public function index(ReservationRepository $reservationRepository): Response
     {
-        $reservations = $reservationRepository->findBy([], ['id' => 'ASC']);
+        $status_confirmed = $reservationRepository->findBy(['status' => 'confirmed'], ['id' => 'ASC']);
+        $status_cancelled = $reservationRepository->findBy(['status' => 'cancelled'], ['id' => 'ASC']);
+
         return $this->render('reservation/index.html.twig', [
-            'reservations' => $reservations,
+            'activeReservations' => $status_confirmed,
+            'cancelledReservations' => $status_cancelled
         ]);
     }
 
@@ -49,6 +52,7 @@ final class ReservationController extends AbstractController
                 $reservation->setCreatedAt(new \DateTimeImmutable());
                 $entityManagerInterface->persist($reservation);
                 $entityManagerInterface->flush();
+                $this->addFlash('success', 'Reservation was created.');
                 return $this->redirectToRoute('index_reservation');
             }
         }
@@ -85,6 +89,7 @@ final class ReservationController extends AbstractController
             }
             if ($form->isValid()) {
                 $entityManagerInterface->flush();
+                $this->addFlash('success', 'Reservation was updated.');
                 return $this->redirectToRoute('index_reservation');
             }
 
@@ -92,5 +97,55 @@ final class ReservationController extends AbstractController
         return $this->render('reservation/edit.html.twig', [
             'form' => $form->createView()
         ]);
+    }
+
+    #[Route('/reservation/delete/{id}', name: 'delete_reservation')]
+    public function delete_reservation(int $id, Request $request, ReservationRepository $reservationRepository, EntityManagerInterface $entityManagerInterface): Response
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->redirectToRoute('index_reservation');
+        }
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('delete_reservation_' . $id, $token)) {
+            $this->addFlash('error', 'Invalid CSRF token');
+            return $this->redirectToRoute('index_reservation');
+        }
+
+        $reservation = $reservationRepository->find($id);
+        if (!$reservation) {
+            return $this->redirectToRoute('index_reservation');
+        } else {
+            $entityManagerInterface->remove($reservation);
+            $entityManagerInterface->flush();
+            $this->addFlash('success', 'Reservation was deleted.');
+        };
+        return $this->redirectToRoute('index_reservation');
+    }
+
+    #[Route('/reservation/cancel/{id}', name: 'cancel_reservation')]
+    public function action(int $id, Request $request, ReservationRepository $reservationRepository, EntityManagerInterface $entityManagerInterface): Response
+    {
+        if (!$request->isMethod('POST')) {
+            return $this->redirectToRoute('index_reservation');
+        }
+
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('cancel_reservation_' . $id, $token)) {
+            $this->addFlash('error', 'Invalid CSRF token');
+            return $this->redirectToRoute('index_reservation');
+        }
+
+        $reservation = $reservationRepository->find($id);
+        if (!$reservation) {
+            return $this->redirectToRoute('index_reservation');
+        }
+        if ($reservation->getStatus() === 'cancelled') {
+            return $this->redirectToRoute('index_reservation');
+        }
+
+        $reservation->setStatus('cancelled');
+        $entityManagerInterface->flush();
+        $this->addFlash('success', 'Reservation was cancelled.');
+        return $this->redirectToRoute('index_reservation');
     }
 }

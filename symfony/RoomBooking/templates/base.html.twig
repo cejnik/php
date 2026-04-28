@@ -20,6 +20,26 @@
         {% endif %}
     </head>
     <body>
+        <header class="auth-bar">
+            <div class="auth-bar-inner">
+                <a class="auth-brand" href="{{ path('index') }}">RoomBooking</a>
+
+                {% if app.user %}
+                    <div class="auth-nav">
+                        <p class="auth-user">Logged in as <strong>{{ app.user.userIdentifier }}</strong></p>
+                        <a class="button button-secondary" href="{{ path('app_logout') }}">Logout</a>
+                    </div>
+                {% else %}
+                    <div class="auth-nav">
+                        <a class="button button-secondary" href="{{ path('app_login') }}">Login</a>
+                        <a class="button button-primary" href="{{ path('app_register') }}">Register</a>
+                    </div>
+                {% endif %}
+            </div>
+        </header>
+
+
+
         {% for label, messages in app.flashes %}
             {% for message in messages %}
                 <div class="flash-message flash-{{ label }}">

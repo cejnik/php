@@ -15,11 +15,12 @@
                 <h1>Rooms</h1>
                 <p class="page-intro">Manage rooms before opening reservations.</p>
             </div>
-        <div class="page-actions">
-            <a class ="button button-secondary "href={{ path('index_reservation') }}>Reserve your room</a>
-            <a class="button button-primary" href="{{ path('new_page') }}">Add new room</a>
-        </div>
-
+                <div class="page-actions">
+                    <a class ="button button-secondary" href="{{ path('index_reservation') }}">Reserve your room</a>
+            {% if is_granted('ROLE_ADMIN') %}
+                    <a class="button button-primary" href="{{ path('new_page') }}">Add new room</a>
+                </div>
+            {% endif %}
         </section>
 
         <section class="room-grid">
@@ -39,6 +40,8 @@
 
                     <p class="room-capacity">{{ room.capacity }} seats</p>
 
+                    {% if is_granted('ROLE_ADMIN') %}
+
                     <div class="room-actions">
                         <a class="button button-secondary" href="{{ path('edit_page', { id: room.id }) }}">Edit room</a>
                         <form action="{{ path('delete_page', { id: room.id }) }}" method="post">
@@ -46,13 +49,17 @@
                             <button class="button button-danger" type="submit">Delete room</button>
                         </form>
                     </div>
+                    {% endif %}
                 </article>
         {% else %}
                 <div class="empty-panel">
                     <h2>No rooms yet</h2>
                     <p>Create your first meeting room and start building the booking system.</p>
-                    <a class="button button-primary" href="{{ path('new_page') }}">Add new room</a>
+                    {% if is_granted('ROLE_ADMIN') %}
+                        <a class="button button-primary" href="{{ path('new_page') }}">Add new room</a>
+                    {% endif %}
                 </div>
+                    
         {% endfor %}
         </section>
     </main>

@@ -25,6 +25,8 @@ final class RoomController extends AbstractController
     #[Route('/new', name: 'new_page')]
     public function action(Request $request, EntityManagerInterface $entityManagerInterface): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $room = new Room();
         $form = $this->createForm(RoomType::class, $room);
         $form->handleRequest($request);
@@ -43,6 +45,8 @@ final class RoomController extends AbstractController
     #[Route('/edit/{id}', name: 'edit_page')]
     public function edit_page(RoomRepository $roomRepository, int $id, Request $request, EntityManagerInterface $entityManagerInterface): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         $room = $roomRepository->find($id);
         if (!$room) {
             return $this->redirectToRoute('index');
@@ -63,6 +67,8 @@ final class RoomController extends AbstractController
     #[Route('/delete/{id}', name: 'delete_page')]
     public function delete_page(int $id, EntityManagerInterface $entityManagerInterface, Request $request, RoomRepository $roomRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_ADMIN');
+
         if (!$request->isMethod('POST')) {
             return $this->redirectToRoute('index');
         }

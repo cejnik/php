@@ -77,11 +77,14 @@ final class RoomController extends AbstractController
         $room = $roomRepository->find($id);
         if (!$room) {
             return $this->redirectToRoute('index');
-        } else {
-            $entityManagerInterface->remove($room);
-            $entityManagerInterface->flush();
+        }
+        if ($room->getReservations()->count() > 0) {
+            $this->addFlash('error', 'Room cannot be deleted because it has reservations.');
             return $this->redirectToRoute('index');
         }
+        $entityManagerInterface->remove($room);
+        $entityManagerInterface->flush();
+        return $this->redirectToRoute('index');
 
     }
 }

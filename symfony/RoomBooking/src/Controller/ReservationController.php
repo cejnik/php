@@ -38,12 +38,15 @@ final class ReservationController extends AbstractController
             $endsAt = $reservation->getEndsAt();
             $room = $reservation->getRoom();
 
-            if ($startsAt && $endsAt && $endsAt <= $startsAt) {
-                $form->get('endsAt')->addError(new FormError('End time must be later than start time.'));
-            } else {
-                $conflictingReservation = $reservationRepository->findConflictingReservation($room, $startsAt, $endsAt);
-                if ($conflictingReservation) {
-                    $form->get('endsAt')->addError(new FormError('This room is already reserved for the selected time.'));
+            if ($startsAt && $endsAt && $room) {
+
+                if ($endsAt <= $startsAt) {
+                    $form->get('endsAt')->addError(new FormError('End time must be later than start time.'));
+                } else {
+                    $conflictingReservation = $reservationRepository->findConflictingReservation($room, $startsAt, $endsAt);
+                    if ($conflictingReservation) {
+                        $form->get('endsAt')->addError(new FormError('This room is already reserved for the selected time.'));
+                    }
                 }
             }
 
@@ -79,12 +82,14 @@ final class ReservationController extends AbstractController
             $endsAt = $reservation->getEndsAt();
             $room = $reservation->getRoom();
 
-            if ($startsAt && $endsAt && $endsAt <= $startsAt) {
-                $form->get('endsAt')->addError(new FormError('End time must be later than start time.'));
-            } else {
-                $conflictingReservation = $reservationRepository->findConflictingReservation($room, $startsAt, $endsAt, $reservation->getId());
-                if ($conflictingReservation) {
-                    $form->get('endsAt')->addError(new FormError('This room is already reserved for the selected time.'));
+            if ($startsAt && $endsAt && $room) {
+                if ($endsAt <= $startsAt) {
+                    $form->get('endsAt')->addError(new FormError('End time must be later than start time.'));
+                } else {
+                    $conflictingReservation = $reservationRepository->findConflictingReservation($room, $startsAt, $endsAt, $reservation->getId());
+                    if ($conflictingReservation) {
+                        $form->get('endsAt')->addError(new FormError('This room is already reserved for the selected time.'));
+                    }
                 }
             }
             if ($form->isValid()) {

@@ -11,6 +11,7 @@ use App\Repository\ReservationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
+use App\Entity\User;
 
 final class ReservationController extends AbstractController
 {
@@ -29,6 +30,8 @@ final class ReservationController extends AbstractController
     #[Route('/reservation/new', name: 'new_reservation')]
     public function new_reservation(Request $request, EntityManagerInterface $entityManagerInterface, ReservationRepository $reservationRepository): Response
     {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
         $reservation = new Reservation();
         $form = $this->createForm(ReservationType::class, $reservation);
         $form->handleRequest($request);
@@ -53,6 +56,11 @@ final class ReservationController extends AbstractController
             if ($form->isValid()) {
                 $reservation->setStatus('confirmed');
                 $reservation->setCreatedAt(new \DateTimeImmutable());
+                $user = $this->getUser();
+                if (!$user instanceof User) {
+                    throw $this->createAccessDeniedException('Access denied.');
+                }
+                $reservation->setUser($user);
                 $entityManagerInterface->persist($reservation);
                 $entityManagerInterface->flush();
                 $this->addFlash('success', 'Reservation was created.');
@@ -72,6 +80,14 @@ final class ReservationController extends AbstractController
         $reservation = $reservationRepository->find($id);
         if (!$reservation) {
             return $this->redirectToRoute('index_reservation');
+        }
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+        if (!$this->isGranted('ROLE_ADMIN') && $reservation->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Access denied.');
         }
 
         $form = $this->createForm(ReservationType::class, $reservation);
@@ -119,11 +135,21 @@ final class ReservationController extends AbstractController
         $reservation = $reservationRepository->find($id);
         if (!$reservation) {
             return $this->redirectToRoute('index_reservation');
-        } else {
-            $entityManagerInterface->remove($reservation);
-            $entityManagerInterface->flush();
-            $this->addFlash('success', 'Reservation was deleted.');
-        };
+        }
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+        if (!$this->isGranted('ROLE_ADMIN') && $reservation->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+        $entityManagerInterface->remove($reservation);
+        $entityManagerInterface->flush();
+        $this->addFlash('success', 'Reservation was deleted.');
+
         return $this->redirectToRoute('index_reservation');
     }
 
@@ -144,6 +170,17 @@ final class ReservationController extends AbstractController
         if (!$reservation) {
             return $this->redirectToRoute('index_reservation');
         }
+
+        $user = $this->getUser();
+        if (!$user instanceof User) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+        if (!$this->isGranted('ROLE_ADMIN') && $reservation->getUser() !== $user) {
+            throw $this->createAccessDeniedException('Access denied.');
+        }
+
+
         if ($reservation->getStatus() === 'cancelled') {
             return $this->redirectToRoute('index_reservation');
         }

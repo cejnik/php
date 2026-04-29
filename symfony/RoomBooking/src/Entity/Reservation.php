@@ -39,6 +39,9 @@ class Reservation
     #[ORM\Column(length: 255)]
     private ?string $visitorEmail = null;
 
+    #[ORM\ManyToOne(inversedBy: 'reservations')]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -137,6 +140,18 @@ class Reservation
     public function setVisitorEmail(string $visitorEmail): static
     {
         $this->visitorEmail = $visitorEmail;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

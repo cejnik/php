@@ -18,7 +18,9 @@
 
             <div class="page-actions">
                 <a class="button button-secondary" href="{{ path('index') }}">Back to rooms</a>
-                <a class="button button-secondary" href="{{ path('new_reservation') }}">New reservation</a>
+                {% if app.user %}
+                    <a class="button button-secondary" href="{{ path('new_reservation') }}">New reservation</a>
+                {% endif %}
             </div>
         </section>
 
@@ -40,15 +42,17 @@
                         </div>
                         <div class="reservation-controls">
                             <div class="reservation-actions">
-                                <a class="button button-secondary" href="{{ path('edit_reservation', { id: reservation.id }) }}">Edit reservation</a>
-                                <form action="{{ path('cancel_reservation', {id: reservation.id}) }}" method="post">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation_' ~ reservation.id)}}">
-                                    <button type="submit" class="button button-secondary">Cancel reservation</button>
-                                </form>
-                                <form action="{{ path('delete_reservation', { id: reservation.id }) }}" method="post">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_reservation_' ~ reservation.id) }}">
-                                    <button type="submit" class="button button-danger">Delete reservation</button>
-                                </form>
+                                {% if is_granted('ROLE_ADMIN') or (app.user and reservation.user == app.user) %}
+                                    <a class="button button-secondary" href="{{ path('edit_reservation', { id: reservation.id }) }}">Edit reservation</a>
+                                        <form action="{{ path('cancel_reservation', {id: reservation.id}) }}" method="post">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('cancel_reservation_' ~ reservation.id)}}">
+                                                <button type="submit" class="button button-secondary">Cancel reservation</button>
+                                        </form>
+                                        <form action="{{ path('delete_reservation', { id: reservation.id }) }}" method="post">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('delete_reservation_' ~ reservation.id) }}">
+                                                <button type="submit" class="button button-danger">Delete reservation</button>
+                                        </form>
+                                {% endif %}
                             </div>
                             <span class="reservation-status">{{ reservation.status }}</span>
                         </div>
@@ -83,7 +87,9 @@
                 <div class="empty-panel">
                     <h2>No active reservations</h2>
                     <p>Create the next booking and it will appear here.</p>
-                    <a class="button button-primary" href="{{ path('new_reservation') }}">New reservation</a>
+                    {% if app.user %}
+                        <a class="button button-primary" href="{{ path('new_reservation') }}">New reservation</a>
+                    {% endif %}
                 </div>
             {% endfor %}
             </div>
@@ -107,11 +113,13 @@
                         </div>
                         <div class="reservation-controls">
                             <div class="reservation-actions">
+                            {% if is_granted('ROLE_ADMIN') or (app.user and reservation.user == app.user) %}
                                 <form action="{{ path('delete_reservation', { id: reservation.id }) }}" method="post">
                                     <input type="hidden" name="_token" value="{{ csrf_token('delete_reservation_' ~ reservation.id) }}">
                                     <button type="submit" class="button button-secondary">Delete reservation</button>
                                 </form>
                             </div>
+                            {% endif %}
                             <span class="reservation-status reservation-status-cancelled">{{ reservation.status }}</span>
                         </div>
                     </div>

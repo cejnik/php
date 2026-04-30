@@ -121,6 +121,21 @@
     text-decoration: underline;
 }
 
+.reservation-owner {
+    margin-top: -8px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 4px;
+    color: var(--muted);
+    font-size: 0.88rem;
+}
+
+.reservation-owner .reservation-label,
+.reservation-owner p {
+    margin: 0;
+}
+
 .reservation-card-cancelled {
     border-color: #c5ccd6;
     background: #e4e9ef;
@@ -135,6 +150,10 @@
 }
 
 .reservation-card-cancelled .reservation-label {
+    color: #6e7a88;
+}
+
+.reservation-card-cancelled .reservation-owner {
     color: #6e7a88;
 }
 
@@ -197,5 +216,10 @@
     .reservation-status {
         width: 100%;
         text-align: center;
+    }
+
+    .reservation-owner {
+        margin-top: 0;
+        align-items: flex-start;
     }
 }

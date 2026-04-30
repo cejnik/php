@@ -82,6 +82,15 @@
                             <p>{{ reservation.note }}</p>
                         </div>
                     {% endif %}
+
+                    <div class="reservation-owner">
+                        <p class="reservation-label">Owner</p>
+                        {% if reservation.user == null %}
+                            <p>No owner assigned.</p>
+                        {% else %}
+                            <p>{{ reservation.user.email }}</p>
+                        {% endif %}
+                    </div>
                 </article>
             {% else %}
                 <div class="empty-panel">
@@ -113,13 +122,13 @@
                         </div>
                         <div class="reservation-controls">
                             <div class="reservation-actions">
-                            {% if is_granted('ROLE_ADMIN') or (app.user and reservation.user == app.user) %}
-                                <form action="{{ path('delete_reservation', { id: reservation.id }) }}" method="post">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('delete_reservation_' ~ reservation.id) }}">
-                                    <button type="submit" class="button button-secondary">Delete reservation</button>
-                                </form>
+                                {% if is_granted('ROLE_ADMIN') or (app.user and reservation.user == app.user) %}
+                                    <form action="{{ path('delete_reservation', { id: reservation.id }) }}" method="post">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('delete_reservation_' ~ reservation.id) }}">
+                                        <button type="submit" class="button button-secondary">Delete reservation</button>
+                                    </form>
+                                {% endif %}
                             </div>
-                            {% endif %}
                             <span class="reservation-status reservation-status-cancelled">{{ reservation.status }}</span>
                         </div>
                     </div>
@@ -140,6 +149,7 @@
                             <p class="reservation-label">Ends</p>
                             <p>{{ reservation.endsAt|date('Y-m-d H:i') }}</p>
                         </div>
+
                     </div>
 
                     {% if reservation.note %}
@@ -148,6 +158,16 @@
                             <p>{{ reservation.note }}</p>
                         </div>
                     {% endif %}
+
+                    <div class="reservation-owner">
+                        <p class="reservation-label">Owner</p>
+                        {% if reservation.user == null %}
+                            <p>No owner assigned.</p>
+                        {% else %}
+                            <p>{{ reservation.user.email }}</p>
+                        {% endif %}
+                    </div>
+                    
                 </article>
             {% else %}
                 <div class="empty-panel empty-panel-history">

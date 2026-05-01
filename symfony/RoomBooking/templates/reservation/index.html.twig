@@ -30,6 +30,20 @@
                     <p class="eyebrow">Live schedule</p>
                     <h2>Active reservations</h2>
                 </div>
+
+                <form class="reservation-filter" action="{{ path('index_reservation') }}" method="get">
+                    <label class="reservation-filter-label" for="room-filter">Room</label>
+                    <select class="reservation-filter-select" name="room" id="room-filter">
+                        <option value="" {% if not selectedRoomId %}selected{% endif %}>All rooms</option>
+                        {% for room in rooms %}
+                            <option value="{{ room.id }}" {% if selectedRoomId == room.id %}selected{% endif %}>
+                                {{ room.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
+                    <button class="button button-primary" type="submit">Filter</button>
+                    <a class="button button-secondary" href="{{ path('index_reservation') }}">Reset</a>
+                </form>
             </div>
 
             <div class="reservation-list">

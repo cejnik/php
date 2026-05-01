@@ -12,18 +12,33 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Form\FormError;
 use App\Entity\User;
+use App\Repository\RoomRepository;
 
 final class ReservationController extends AbstractController
 {
     #[Route('/reservation', name: 'index_reservation')]
-    public function index(ReservationRepository $reservationRepository): Response
+    public function index(ReservationRepository $reservationRepository, Request $request, RoomRepository $roomRepository): Response
     {
-        $status_confirmed = $reservationRepository->findBy(['status' => 'confirmed'], ['id' => 'ASC']);
-        $status_cancelled = $reservationRepository->findBy(['status' => 'cancelled'], ['id' => 'ASC']);
+        $rooms = $roomRepository->findBy([], ['id' => 'ASC']);
+        $roomId = $request->query->get('room');
 
+        if ($roomId) {
+            $selectedRoom = $roomRepository->find($roomId);
+        } else {
+            $selectedRoom = null;
+        }
+        if ($selectedRoom) {
+            $status_confirmed = $reservationRepository->findBy(['status' => 'confirmed', 'room' => $selectedRoom], ['id' => 'ASC']);
+            $status_cancelled = $reservationRepository->findBy(['status' => 'cancelled', 'room' => $selectedRoom], ['id' => 'ASC']);
+        } else {
+            $status_confirmed = $reservationRepository->findBy(['status' => 'confirmed'], ['id' => 'ASC']);
+            $status_cancelled = $reservationRepository->findBy(['status' => 'cancelled'], ['id' => 'ASC']);
+        }
         return $this->render('reservation/index.html.twig', [
             'activeReservations' => $status_confirmed,
-            'cancelledReservations' => $status_cancelled
+            'cancelledReservations' => $status_cancelled,
+            'rooms' => $rooms,
+            'selectedRoomId' => $roomId
         ]);
     }
 

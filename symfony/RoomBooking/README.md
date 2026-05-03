@@ -49,6 +49,32 @@ php bin/console doctrine:migrations:migrate
 symfony serve
 ```
 
+## Screenshots
+
+### Login
+
+![Login](screenshots/login.png)
+
+### Room List - User
+
+![Room list user](screenshots/room_user.png)
+
+### Room List - Admin
+
+![Room list admin](screenshots/rooms_admin.png)
+
+### Reservation List - User
+
+![Reservation list user](screenshots/reservation_user.png)
+
+### Reservation List - Admin
+
+![Reservation list admin](screenshots/reservation_admin.png)
+
+### API Test in Insomnia
+
+![Insomnia POST test](screenshots/insomnia_post.png)
+
 ## Note
 
 This project is a learning exercise, but unlike the earlier session-based projects it uses Doctrine, PostgreSQL, authentication, and a small protected REST API.

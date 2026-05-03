@@ -170,7 +170,7 @@ final class ApiReservationController extends AbstractController
         ], 201);
 
     }
-    #[Route('/api/reservations/{id}/cancel', name: 'cancel_reservation', methods: ['PATCH'])]
+    #[Route('/api/reservations/{id}/cancel', name: 'api_cancel_reservation', methods: ['PATCH'])]
     public function cancelReservation(ReservationRepository $reservationRepository, EntityManagerInterface $entityManagerInterface, int $id): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
@@ -193,7 +193,7 @@ final class ApiReservationController extends AbstractController
         return $this->json(['message' => 'Reservation was cancelled.'], 200);
     }
 
-    #[Route('/api/reservations/{id}', name: 'delete_reservation', methods: ['DELETE'])]
+    #[Route('/api/reservations/{id}', name: 'api_delete_reservation', methods: ['DELETE'])]
     public function delete_reservation(ReservationRepository $reservationRepository, EntityManagerInterface $entityManagerInterface, int $id): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_USER');

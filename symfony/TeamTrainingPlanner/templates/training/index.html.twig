@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Trainings{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+    {% for training in trainings %}
+            <ul>
+                <li>{{training.title}}</li>
+                <li>{{training.description}}</li>
+                <li>{{training.location}}</li>
+                <li>{{training.capacity}}</li>
+                <li>{{training.createdAt|date('Y-m-d H:i:s')}}</li>
+                <li>{{training.updatedAt|date('Y-m-d H:i:s')}}</li>
+            </ul>
+
+    {% else %}
+            <p>There are no trainings available.</p> 
+    {% endfor %}
+</div>
+{% endblock %}

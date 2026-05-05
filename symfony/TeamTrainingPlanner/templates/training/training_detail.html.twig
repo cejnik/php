@@ -1,0 +1,17 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ training.title }}{% endblock %}
+
+{% block body %}
+
+<div class="example-wrapper">
+            <p>{{training.title}}</p>
+            <p>{{training.description}}</p>
+            <p>{{training.location}}</p>
+            <p>{{training.capacity}}</p>
+            <p>{{training.createdAt|date('Y-m-d H:i:s')}}</p>
+            <p>{{training.updatedAt|date('Y-m-d H:i:s')}}</p>
+
+
+</div>
+{% endblock %}

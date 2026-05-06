@@ -2,16 +2,57 @@
 
 {% block title %}{{ training.title }}{% endblock %}
 
+{% block stylesheets %}
+    {{ parent() }}
+    <link rel="stylesheet" href="{{ asset('styles/training-detail.css') }}">
+{% endblock %}
+
 {% block body %}
+    <main class="training-detail-page">
+        <a class="training-detail-back" href="{{ path('app_training_index') }}">Back to training board</a>
 
-<div class="example-wrapper">
-            <p>{{training.title}}</p>
-            <p>{{training.description}}</p>
-            <p>{{training.location}}</p>
-            <p>{{training.capacity}}</p>
-            <p>{{training.createdAt|date('Y-m-d H:i:s')}}</p>
-            <p>{{training.updatedAt|date('Y-m-d H:i:s')}}</p>
+        <article class="training-detail-card">
+            <header class="training-detail-header">
+                <span class="training-detail-badge">Session detail</span>
+                <h1 class="training-detail-title">{{ training.title }}</h1>
+                <p class="training-detail-description">
+                    {{ training.description ?: 'No extra description was added for this session yet.' }}
+                </p>
+            </header>
 
-
-</div>
+            <section class="training-detail-body">
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Scheduled for</span>
+                    <span class="training-detail-value">{{ training.scheduledAt|date('d.m.Y H:i') }}</span>
+                </div>
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Location</span>
+                    <span class="training-detail-value">{{ training.location }}</span>
+                </div>
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Capacity</span>
+                    <span class="training-detail-value">{{ training.capacity }} athletes</span>
+                </div>
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Coach</span>
+                    <span class="training-detail-value">{{ training.coach.email }}</span>
+                </div>
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Created</span>
+                    <span class="training-detail-value">{{ training.createdAt|date('d.m.Y H:i') }}</span>
+                </div>
+                <div class="training-detail-row">
+                    <span class="training-detail-label">Last update</span>
+                    <span class="training-detail-value">{{ training.updatedAt|date('d.m.Y H:i') }}</span>
+                </div>
+                {% if is_granted('ROLE_USER') and app.user == training.coach %}
+                
+                <form class="training-detail-actions" action="{{ path('app_training_delete', { id: training.id }) }}" method="post">
+                    <input type="hidden" name="_token" value="{{ csrf_token('delete_training_' ~ training.id) }}">
+                    <button class="training-detail-delete" type="submit">Delete training</button>
+                </form>
+                {% endif %}
+            </section>
+        </article>
+    </main>
 {% endblock %}

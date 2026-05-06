@@ -49,7 +49,7 @@ class TeamTrainningPlannerAuthenticator extends AbstractLoginFormAuthenticator
         }
 
         // For example:
-        return new RedirectResponse($this->urlGenerator->generate(self::LOGIN_ROUTE));
+        return new RedirectResponse($this->urlGenerator->generate('app_training_index'));
     }
 
     protected function getLoginUrl(Request $request): string

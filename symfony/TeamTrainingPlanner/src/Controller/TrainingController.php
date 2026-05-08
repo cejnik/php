@@ -21,8 +21,21 @@ final class TrainingController extends AbstractController
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trainings = $trainingRepository->findBy([], ['id' => 'ASC']);
 
+        $trainingCards = [];
+
+        foreach ($trainings as $training) {
+            $attendanceCount = $training->getAttendances()->count();
+            $remainingSpots = $training->getCapacity() - $attendanceCount;
+
+            $trainingCards[] = [
+                'training' => $training,
+                'attendanceCount' => $attendanceCount,
+                'remainingSpots' => $remainingSpots,
+            ];
+        }
+
         return $this->render('training/index.html.twig', [
-            'trainings' => $trainings,
+            'trainingCards' => $trainingCards,
         ]);
     }
 
@@ -60,9 +73,14 @@ final class TrainingController extends AbstractController
         $attendance = $trainingAttendanceRepository->findOneBy(['participant' => $this->getUser(), 'training' => $training]);
         $isJoined = $attendance !== null;
 
+        $attendanceCount = $training->getAttendances()->count();
+        $remainingSpots = $training->getCapacity() - $attendanceCount;
+
         return $this->render('training/training_detail.html.twig', [
             'training' => $training,
             'isJoined' => $isJoined,
+            'attendanceCount' => $attendanceCount,
+            'remainingSpots' => $remainingSpots,
         ]);
     }
 
@@ -133,6 +151,11 @@ final class TrainingController extends AbstractController
 
         $user = $this->getUser();
         $existingAttendance = $trainingAttendanceRepository->findOneBy(['participant' => $user, 'training' => $training]);
+
+        $attendanceCount = $training->getAttendances()->count();
+        if ($attendanceCount >= $training->getCapacity()) {
+            return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+        }
 
         if ($existingAttendance === null) {
             $trainingAttendance = new TrainingAttendance();

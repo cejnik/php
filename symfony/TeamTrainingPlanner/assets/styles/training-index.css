@@ -12,6 +12,53 @@
     padding: 3.5rem 1.5rem 4rem;
 }
 
+.training-topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.training-brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    color: #dfe9f6;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.training-brand::before {
+    content: "";
+    width: 0.75rem;
+    height: 0.75rem;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #fb923c, #f97316);
+    box-shadow: 0 0 18px rgba(249, 115, 22, 0.5);
+}
+
+.training-logout {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.8rem 1.1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(248, 113, 113, 0.22);
+    background: rgba(127, 29, 29, 0.28);
+    color: #fecaca;
+    font-weight: 700;
+    text-decoration: none;
+    transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
+}
+
+.training-logout:hover {
+    transform: translateY(-1px);
+    background: rgba(153, 27, 27, 0.4);
+    color: #ffe2e2;
+}
+
 .training-hero {
     display: flex;
     justify-content: space-between;
@@ -184,6 +231,15 @@
 }
 
 @media (max-width: 720px) {
+    .training-topbar {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .training-logout {
+        width: 100%;
+    }
+
     .training-hero {
         align-items: flex-start;
         flex-direction: column;

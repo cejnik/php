@@ -3,7 +3,9 @@
 namespace App\Controller;
 
 use App\Entity\Training;
+use App\Entity\TrainingAttendance;
 use App\Form\TrainingType;
+use App\Repository\TrainingAttendanceRepository;
 use App\Repository\TrainingRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -18,6 +20,7 @@ final class TrainingController extends AbstractController
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $trainings = $trainingRepository->findBy([], ['id' => 'ASC']);
+
         return $this->render('training/index.html.twig', [
             'trainings' => $trainings,
         ]);
@@ -45,15 +48,21 @@ final class TrainingController extends AbstractController
     }
 
     #[Route('/trainings/{id}', name: 'app_training_detail')]
-    public function detail(TrainingRepository $trainingRepository, int $id): Response
+    public function detail(TrainingRepository $trainingRepository, int $id, TrainingAttendanceRepository $trainingAttendanceRepository): Response
     {
         $this->denyAccessUnlessGranted('ROLE_USER');
         $training = $trainingRepository->find($id);
+
         if ($training === null) {
             throw $this->createNotFoundException('Training not found');
         }
+
+        $attendance = $trainingAttendanceRepository->findOneBy(['participant' => $this->getUser(), 'training' => $training]);
+        $isJoined = $attendance !== null;
+
         return $this->render('training/training_detail.html.twig', [
             'training' => $training,
+            'isJoined' => $isJoined,
         ]);
     }
 
@@ -105,6 +114,63 @@ final class TrainingController extends AbstractController
         $entityManager->remove($training);
         $entityManager->flush();
         return $this->redirectToRoute('app_training_index');
+    }
+
+    #[Route('/trainings/{id}/join', name: 'app_training_join', methods: ['POST'])]
+    public function join(Request $request, TrainingRepository $trainingRepository, EntityManagerInterface $entityManager, int $id, TrainingAttendanceRepository $trainingAttendanceRepository): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+        $training = $trainingRepository->find($id);
+
+        if ($training === null) {
+            throw $this->createNotFoundException('Training not found.');
+        }
+
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('join_training_'.$id, $token)) {
+            return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+        }
+
+        $user = $this->getUser();
+        $existingAttendance = $trainingAttendanceRepository->findOneBy(['participant' => $user, 'training' => $training]);
+
+        if ($existingAttendance === null) {
+            $trainingAttendance = new TrainingAttendance();
+            $trainingAttendance->setParticipant($user);
+            $trainingAttendance->setTraining($training);
+            $trainingAttendance->setJoinedAt(new \DateTimeImmutable());
+            $entityManager->persist($trainingAttendance);
+            $entityManager->flush();
+            return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+        }
+
+        return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+    }
+
+    #[Route('/trainings/{id}/leave', name: 'app_training_leave', methods: ['POST'])]
+    public function leave(Request $request, int $id, TrainingRepository $trainingRepository, TrainingAttendanceRepository $trainingAttendanceRepository, EntityManagerInterface $entityManager): Response
+    {
+        $this->denyAccessUnlessGranted('ROLE_USER');
+
+        $training = $trainingRepository->find($id);
+
+        if ($training === null) {
+            throw $this->createNotFoundException('Training not found.');
+        }
+
+        $token = $request->request->get('_token');
+        if (!$this->isCsrfTokenValid('leave_training_'.$id, $token)) {
+            return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+        }
+
+        $user = $this->getUser();
+        $attendance = $trainingAttendanceRepository->findOneBy(['participant' => $user, 'training' => $training]);
+        if ($attendance === null) {
+            return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
+        }
+        $entityManager->remove($attendance);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
     }
 
 

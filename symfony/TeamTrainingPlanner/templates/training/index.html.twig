@@ -9,10 +9,14 @@
 
 {% block body %}
     <main class="training-page">
+        <div class="training-topbar">
+            <div class="training-brand">Team Training Planner</div>
+            <a class="training-logout" href="{{ path('app_logout') }}">Logout</a>
+        </div>
+
         <section class="training-hero">
             <div>
-                <span class="training-kicker">Team Training Planner</span>
-                <span class="training-kicker"><a href={{ path('app_logout') }}>Logout</a></span>
+                <span class="training-kicker">Training Board</span>
                 <h1 class="training-title">Train smarter, not noisier.</h1>
                 <p class="training-subtitle">
                     Keep sessions visible, structured and easy to scan. Coaches can publish the plan,

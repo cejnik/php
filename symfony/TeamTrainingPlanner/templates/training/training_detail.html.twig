@@ -45,13 +45,29 @@
                     <span class="training-detail-label">Last update</span>
                     <span class="training-detail-value">{{ training.updatedAt|date('d.m.Y H:i') }}</span>
                 </div>
-                {% if is_granted('ROLE_USER') and app.user == training.coach %}
-                
-                <form class="training-detail-actions" action="{{ path('app_training_delete', { id: training.id }) }}" method="post">
-                    <input type="hidden" name="_token" value="{{ csrf_token('delete_training_' ~ training.id) }}">
-                    <button class="training-detail-delete" type="submit">Delete training</button>
-                </form>
-                {% endif %}
+
+
+                <div class="training-detail-actions">
+                    {% if  isJoined == false %}
+                        <form action="{{ path('app_training_join', { id: training.id }) }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('join_training_' ~ training.id) }}">
+                            <button class="training-detail-join" type="submit">Join training</button>
+                        </form>
+                    {% else %}
+                        <form action="{{ path('app_training_leave', { id: training.id }) }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('leave_training_' ~ training.id) }}">
+                            <button class="training-detail-leave" type="submit">Leave training</button>
+                        </form>
+                        
+                    {% endif %}
+
+                    {% if is_granted('ROLE_USER') and app.user == training.coach %}
+                        <form action="{{ path('app_training_delete', { id: training.id }) }}" method="post">
+                            <input type="hidden" name="_token" value="{{ csrf_token('delete_training_' ~ training.id) }}">
+                            <button class="training-detail-delete" type="submit">Delete training</button>
+                        </form>
+                    {% endif %}
+                </div>
             </section>
         </article>
     </main>

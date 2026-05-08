@@ -42,7 +42,7 @@ final class TrainingController extends AbstractController
     #[Route('/trainings/new', name: 'app_training_new')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_COACH');
         $training = new Training();
         $form = $this->createForm(TrainingType::class, $training);
         $form->handleRequest($request);
@@ -53,6 +53,7 @@ final class TrainingController extends AbstractController
             $training->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->persist($training);
             $entityManager->flush();
+            $this->addFlash('success', 'Training created successfully!');
             return $this->redirectToRoute('app_training_index');
         }
         return $this->render('training/new.html.twig', [
@@ -87,7 +88,7 @@ final class TrainingController extends AbstractController
     #[Route('/trainings/{id}/edit', name: 'app_training_edit')]
     public function edit(TrainingRepository $trainingRepository, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_COACH');
         $training = $trainingRepository->find($id);
         if ($training === null) {
             throw $this->createNotFoundException('Training not found');
@@ -101,6 +102,7 @@ final class TrainingController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $training->setUpdatedAt(new \DateTimeImmutable());
             $entityManager->flush();
+            $this->addFlash('success', 'Training updated successfully!');
             return $this->redirectToRoute('app_training_index');
         }
         return $this->render('training/edit.html.twig', [
@@ -112,7 +114,7 @@ final class TrainingController extends AbstractController
     #[Route('/trainings/{id}/delete', name: 'app_training_delete', methods: ['POST'])]
     public function delete(Request $request, TrainingRepository $trainingRepository, int $id, EntityManagerInterface $entityManager): Response
     {
-        $this->denyAccessUnlessGranted('ROLE_USER');
+        $this->denyAccessUnlessGranted('ROLE_COACH');
 
         $token = $request->request->get('_token');
         if (!$this->isCsrfTokenValid('delete_training_'.$id, $token)) {
@@ -131,6 +133,7 @@ final class TrainingController extends AbstractController
 
         $entityManager->remove($training);
         $entityManager->flush();
+        $this->addFlash('success', 'Training deleted successfully!');
         return $this->redirectToRoute('app_training_index');
     }
 
@@ -154,6 +157,7 @@ final class TrainingController extends AbstractController
 
         $attendanceCount = $training->getAttendances()->count();
         if ($attendanceCount >= $training->getCapacity()) {
+            $this->addFlash('warning', 'Cannot join training. Capacity has been reached.');
             return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
         }
 
@@ -164,9 +168,10 @@ final class TrainingController extends AbstractController
             $trainingAttendance->setJoinedAt(new \DateTimeImmutable());
             $entityManager->persist($trainingAttendance);
             $entityManager->flush();
+            $this->addFlash('success', 'You have joined the training.');
             return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
         }
-
+        $this->addFlash('info', 'You are already joined to this training.');
         return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
     }
 
@@ -189,10 +194,12 @@ final class TrainingController extends AbstractController
         $user = $this->getUser();
         $attendance = $trainingAttendanceRepository->findOneBy(['participant' => $user, 'training' => $training]);
         if ($attendance === null) {
+            $this->addFlash('info', 'You are not joined to this training.');
             return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
         }
         $entityManager->remove($attendance);
         $entityManager->flush();
+        $this->addFlash('success', 'You have left the training.');
         return $this->redirectToRoute('app_training_detail', ['id' => $training->getId()]);
     }
 

@@ -31,7 +31,11 @@
                 </div>
                 <div class="training-detail-row">
                     <span class="training-detail-label">Open spots</span>
-                    <span class="training-detail-value">{{remainingSpots}}/{{training.capacity}}</span>
+                    {% if remainingSpots == 0 %}
+                        <spanclass class="training-detail-value">Fully booked</span>
+                    {% else %}
+                        <span class="training-detail-value">{{remainingSpots}}/{{training.capacity}}</span>
+                    {% endif %}
                 </div>
                 <div class="training-detail-row">
                     <span class="training-detail-label">Coach</span>
@@ -48,17 +52,18 @@
 
 
                 <div class="training-detail-actions">
-                    {% if  isJoined == false %}
-                        <form action="{{ path('app_training_join', { id: training.id }) }}" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token('join_training_' ~ training.id) }}">
-                            <button class="training-detail-join" type="submit">Join training</button>
-                        </form>
-                    {% else %}
-                        <form action="{{ path('app_training_leave', { id: training.id }) }}" method="post">
-                            <input type="hidden" name="_token" value="{{ csrf_token('leave_training_' ~ training.id) }}">
-                            <button class="training-detail-leave" type="submit">Leave training</button>
-                        </form>
-                        
+                    {% if remainingSpots !== 0 %}
+                        {% if  isJoined == false %}
+                            <form action="{{ path('app_training_join', { id: training.id }) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('join_training_' ~ training.id) }}">
+                                <button class="training-detail-join" type="submit">Join training</button>
+                            </form>
+                        {% else %}
+                            <form action="{{ path('app_training_leave', { id: training.id }) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('leave_training_' ~ training.id) }}">
+                                <button class="training-detail-leave" type="submit">Leave training</button>
+                            </form>
+                        {% endif %}
                     {% endif %}
 
                     {% if is_granted('ROLE_USER') and app.user == training.coach %}

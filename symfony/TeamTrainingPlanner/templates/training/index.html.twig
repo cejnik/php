@@ -23,9 +23,10 @@
                     players can instantly see where they need to be and when it starts.
                 </p>
             </div>
-            <a class="training-action" href="{{ path('app_training_new') }}">Create new training</a>
+            {% if is_granted('ROLE_COACH') %}
+                <a class="training-action" href="{{ path('app_training_new') }}">Create new training</a>
+            {% endif %}
         </section>
-
         {% if trainingCards is not empty %}
             <section class="training-grid">
                 {% for card in trainingCards %}
@@ -44,7 +45,11 @@
                             </div>
                             <div class="training-stat">
                                 <span class="training-stat__label">Open spots:</span>
-                                <span class="training-stat__value">{{card.remainingSpots}}/{{card.training.capacity}}</span>
+                                {% if card.remainingSpots == 0 %}
+                                    <span class="training-stat__value">Full</span>
+                                {% else %}
+                                    <span class="training-stat__value">{{card.remainingSpots}}/{{card.training.capacity}}</span>
+                                {% endif %}
                             </div>
                         </div>
                         <div class="training-card__actions">
